@@ -47,8 +47,23 @@
 
 Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of line."
-  (interactive) ; Use (interactive "^") in Emacs 23 to make shift-select work
+  (interactive "^") ; Use (interactive "^") in Emacs 23 to make shift-select work
   (let ((oldpos (point)))
     (back-to-indentation)
     (and (= oldpos (point))
          (beginning-of-line))))
+
+(defun next-multiframe-window-wrapper()
+  (interactive)
+  (next-multiframe-window)
+  (if (string= (buffer-name) "*SPEEDBAR*")
+      (next-multiframe-window)))
+
+(defun python-run ()
+  "Use to run Python programs."
+  (interactive)
+  (save-buffer)
+  (start-process-shell-command "python async" nil (concat
+			"mate-terminal -e \"/bin/bash -c \\\"python " (buffer-file-name)
+			       "; echo Don\\\'t press any key...; read -n 1\\\"\"")))
+
